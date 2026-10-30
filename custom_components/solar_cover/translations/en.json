@@ -1,0 +1,155 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "New curtain",
+        "description": "Pick the curtain that gets solar control. Each curtain becomes its own device.",
+        "data": { "cover_entity_id": "Curtain" }
+      },
+      "discovery_confirm": {
+        "title": "Curtain found",
+        "description": "Found **{name}** (`{entity_id}`). Set up solar control for it?"
+      },
+      "geometry": {
+        "title": "Installation geometry",
+        "description": "Dimensions in centimeters, measured from the floor. Sun is assumed to enter on the curtain side and only then reach the door.",
+        "data": {
+          "name": "Name",
+          "facade_azimuth": "Facade azimuth (°)",
+          "max_incidence": "Maximum incidence angle (°)",
+          "roll_center_height": "Roll center to floor (cm)",
+          "edge_to_roll_open": "Edge to roll center, open (cm)",
+          "edge_to_floor_closed": "Edge to floor, closed (cm)",
+          "beam_height": "Clear height under the beam (cm)",
+          "door_distance": "Curtain to door distance (cm)",
+          "door_height": "Door height (cm)"
+        },
+        "data_description": {
+          "facade_azimuth": "Compass direction the facade faces: 0 = north, 90 = east, 180 = south, 270 = west.",
+          "max_incidence": "For grazing sun beyond this angle from the facade normal, the sun does not close the curtain.",
+          "roll_center_height": "Height of the roll center with the curtain 100% open.",
+          "edge_to_roll_open": "Distance from the bottom edge to the roll center with the curtain 100% open.",
+          "edge_to_floor_closed": "Distance from the bottom edge to the floor with the curtain at 0% (closed).",
+          "beam_height": "Height of the beam underside: the upper limit of the opening the sun comes through."
+        }
+      },
+      "sensors": {
+        "title": "Sensors and horizon",
+        "description": "All optional. Sensors left empty are no longer required by the decision.",
+        "data": {
+          "temperature_entity": "Temperature sensor",
+          "lux_entity": "Illuminance sensor",
+          "alarm_entity": "Alarm (disarmed = control allowed)",
+          "horizon": "Horizon profile (neighboring building)"
+        },
+        "data_description": {
+          "horizon": "Azimuth:elevation points of the building top, separated by semicolons. E.g. 262:15; 291:15 (top at 15° between 262° and 291°). Outside the points there is no obstruction."
+        }
+      }
+    },
+    "error": {
+      "invalid_geometry": "Inconsistent dimensions: the beam must be above the closed edge and not above the open edge, and distances must be positive.",
+      "invalid_horizon": "Invalid format. Use azimuth:elevation pairs separated by semicolons, with at least two points."
+    },
+    "abort": {
+      "already_configured": "This curtain already has solar control.",
+      "already_in_progress": "Setup for this curtain is already in progress.",
+      "no_covers": "There are no cover entities left without solar control."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Installation geometry",
+        "description": "Dimensions in centimeters, measured from the floor.",
+        "data": {
+          "facade_azimuth": "Facade azimuth (°)",
+          "max_incidence": "Maximum incidence angle (°)",
+          "roll_center_height": "Roll center to floor (cm)",
+          "edge_to_roll_open": "Edge to roll center, open (cm)",
+          "edge_to_floor_closed": "Edge to floor, closed (cm)",
+          "beam_height": "Clear height under the beam (cm)",
+          "door_distance": "Curtain to door distance (cm)",
+          "door_height": "Door height (cm)"
+        }
+      },
+      "sensors": {
+        "title": "Sensors and horizon",
+        "data": {
+          "temperature_entity": "Temperature sensor",
+          "lux_entity": "Illuminance sensor",
+          "alarm_entity": "Alarm (disarmed = control allowed)",
+          "horizon": "Horizon profile (neighboring building)"
+        },
+        "data_description": {
+          "horizon": "Azimuth:elevation points of the building top, separated by semicolons. E.g. 262:15; 291:15"
+        }
+      }
+    },
+    "error": {
+      "invalid_geometry": "Inconsistent dimensions: the beam must be above the closed edge and not above the open edge, and distances must be positive.",
+      "invalid_horizon": "Invalid format. Use azimuth:elevation pairs separated by semicolons, with at least two points."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "desired_position": { "name": "Desired position" },
+      "reason": {
+        "name": "Reason",
+        "state": {
+          "sun_below_horizon": "Sun below horizon",
+          "sun_not_on_facade": "Sun not on facade",
+          "alarm": "Alarm not disarmed",
+          "alarm_unavailable": "Alarm unavailable",
+          "temperature_low": "Temperature below minimum",
+          "temperature_unavailable": "Temperature unavailable",
+          "low_light": "Low light",
+          "building_shadow": "Building blocks the sun",
+          "geometric": "Sun protection (geometry)"
+        }
+      },
+      "status": {
+        "name": "Control status",
+        "state": {
+          "idle": "In position",
+          "moving": "Moving",
+          "waiting": "Waiting for interval",
+          "paused": "Paused (manual change)",
+          "disabled": "Disabled",
+          "hold": "Holding (input unavailable)",
+          "unavailable": "Curtain unavailable"
+        }
+      },
+      "sun_delta": { "name": "Sun angle on facade" },
+      "profile_angle": { "name": "Profile angle" },
+      "shadow_drop": { "name": "Ray drop to the door" },
+      "door_lit": { "name": "Lit door height" },
+      "horizon_elevation": { "name": "Building horizon" },
+      "sun_azimuth": { "name": "Sun azimuth" },
+      "sun_elevation": { "name": "Sun elevation" }
+    },
+    "binary_sensor": {
+      "sun_on_facade": { "name": "Sun on facade" },
+      "light_high": { "name": "High illuminance" },
+      "building_shadow": { "name": "Building shadow" },
+      "manual_pause": { "name": "Manual change pause" }
+    },
+    "switch": {
+      "auto_control": { "name": "Automatic control" }
+    },
+    "button": {
+      "resume": { "name": "Resume control" }
+    },
+    "number": {
+      "temperature_min": { "name": "Minimum temperature" },
+      "lux_on": { "name": "Lux to turn on" },
+      "lux_off": { "name": "Lux to turn off" },
+      "lux_delay": { "name": "Illuminance delay" },
+      "margin": { "name": "Shadow margin" },
+      "tolerance": { "name": "Opening tolerance" },
+      "min_interval": { "name": "Minimum interval between openings" },
+      "manual_pause": { "name": "Pause after manual change" }
+    }
+  }
+}

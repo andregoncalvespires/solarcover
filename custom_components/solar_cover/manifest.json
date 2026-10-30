@@ -1,0 +1,12 @@
+{
+  "domain": "solar_cover",
+  "name": "Solar Cover",
+  "codeowners": ["@andregoncalvespires"],
+  "config_flow": true,
+  "documentation": "https://github.com/andregoncalvespires/autocover",
+  "integration_type": "device",
+  "iot_class": "calculation",
+  "issue_tracker": "https://github.com/andregoncalvespires/autocover/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

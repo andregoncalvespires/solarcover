@@ -1,0 +1,45 @@
+name: Auto tag
+
+# Depois que os testes passam em main, cria a tag v<versão> (e o release) a partir
+# da versão do manifest.json, se essa tag ainda não existir. Para lançar uma nova
+# versão basta aumentar "version" em custom_components/solar_cover/manifest.json.
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Ler versão do manifest
+        id: version
+        run: |
+          version=$(jq -r '.version' custom_components/solar_cover/manifest.json)
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.]+)?$ ]]; then
+            echo "Versão inválida no manifest: '$version'" >&2
+            exit 1
+          fi
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Criar tag e release se ainda não existirem
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG já existe; nada a fazer."
+            exit 0
+          fi
+          gh release create "$TAG" --target "$SHA" --title "$TAG" --generate-notes

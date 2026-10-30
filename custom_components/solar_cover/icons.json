@@ -1,0 +1,37 @@
+{
+  "entity": {
+    "sensor": {
+      "desired_position": { "default": "mdi:blinds-horizontal" },
+      "reason": { "default": "mdi:help-circle-outline" },
+      "status": { "default": "mdi:state-machine" },
+      "sun_delta": { "default": "mdi:compass-outline" },
+      "profile_angle": { "default": "mdi:angle-acute" },
+      "shadow_drop": { "default": "mdi:arrow-collapse-down" },
+      "door_lit": { "default": "mdi:door-open" },
+      "horizon_elevation": { "default": "mdi:office-building" },
+      "sun_azimuth": { "default": "mdi:sun-compass" },
+      "sun_elevation": { "default": "mdi:weather-sunny" }
+    },
+    "binary_sensor": {
+      "sun_on_facade": { "default": "mdi:white-balance-sunny" },
+      "building_shadow": { "default": "mdi:office-building" },
+      "manual_pause": { "default": "mdi:hand-back-right" }
+    },
+    "switch": {
+      "auto_control": { "default": "mdi:robot" }
+    },
+    "button": {
+      "resume": { "default": "mdi:play-circle-outline" }
+    },
+    "number": {
+      "temperature_min": { "default": "mdi:thermometer" },
+      "lux_on": { "default": "mdi:brightness-6" },
+      "lux_off": { "default": "mdi:brightness-4" },
+      "lux_delay": { "default": "mdi:timer-sand" },
+      "margin": { "default": "mdi:arrow-expand-vertical" },
+      "tolerance": { "default": "mdi:target" },
+      "min_interval": { "default": "mdi:timer-outline" },
+      "manual_pause": { "default": "mdi:hand-back-right-outline" }
+    }
+  }
+}

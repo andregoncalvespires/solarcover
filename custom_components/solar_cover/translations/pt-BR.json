@@ -1,0 +1,155 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Nova cortina",
+        "description": "Escolha a cortina que terá controle solar. Cada cortina vira um dispositivo próprio.",
+        "data": { "cover_entity_id": "Cortina" }
+      },
+      "discovery_confirm": {
+        "title": "Cortina encontrada",
+        "description": "Encontrei **{name}** (`{entity_id}`). Deseja configurar o controle solar dela?"
+      },
+      "geometry": {
+        "title": "Geometria da instalação",
+        "description": "Cotas em centímetros, medidas a partir do piso. O sol é considerado entrando pelo lado da cortina e só depois alcançando a porta.",
+        "data": {
+          "name": "Nome",
+          "facade_azimuth": "Azimute da fachada (°)",
+          "max_incidence": "Ângulo máximo de incidência (°)",
+          "roll_center_height": "Centro do rolo ao piso (cm)",
+          "edge_to_roll_open": "Borda ao centro do rolo, aberta (cm)",
+          "edge_to_floor_closed": "Borda ao piso, fechada (cm)",
+          "beam_height": "Altura do vão livre sob a viga (cm)",
+          "door_distance": "Distância da cortina à porta (cm)",
+          "door_height": "Altura da porta (cm)"
+        },
+        "data_description": {
+          "facade_azimuth": "Direção para onde a fachada aponta, pela bússola: 0 = norte, 90 = leste, 180 = sul, 270 = oeste.",
+          "max_incidence": "Com o sol mais rasante que isso (em relação à normal da fachada) a cortina não é fechada pelo sol.",
+          "roll_center_height": "Altura do centro do rolo com a cortina 100% aberta.",
+          "edge_to_roll_open": "Distância da borda inferior ao centro do rolo com a cortina 100% aberta.",
+          "edge_to_floor_closed": "Distância da borda inferior ao piso com a cortina 0% (fechada).",
+          "beam_height": "Altura da face inferior da viga: o limite superior do vão por onde o sol entra."
+        }
+      },
+      "sensors": {
+        "title": "Sensores e horizonte",
+        "description": "Tudo opcional. Sensores não informados deixam de ser exigidos na decisão.",
+        "data": {
+          "temperature_entity": "Sensor de temperatura",
+          "lux_entity": "Sensor de luminosidade",
+          "alarm_entity": "Alarme (desarmado = pode controlar)",
+          "horizon": "Perfil do horizonte (prédio vizinho)"
+        },
+        "data_description": {
+          "horizon": "Pontos azimute:elevação do topo do prédio, separados por ponto e vírgula. Ex.: 262:15; 291:15 (topo a 15° entre 262° e 291°). Fora dos pontos não há obstrução."
+        }
+      }
+    },
+    "error": {
+      "invalid_geometry": "Cotas incoerentes: a viga deve ficar acima da borda fechada e não acima da borda aberta, e as distâncias devem ser positivas.",
+      "invalid_horizon": "Formato inválido. Use pares azimute:elevação separados por ponto e vírgula, com pelo menos dois pontos."
+    },
+    "abort": {
+      "already_configured": "Esta cortina já tem controle solar.",
+      "already_in_progress": "A configuração desta cortina já está em andamento.",
+      "no_covers": "Não há entidades de cortina (cover) disponíveis sem controle solar."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Geometria da instalação",
+        "description": "Cotas em centímetros, medidas a partir do piso.",
+        "data": {
+          "facade_azimuth": "Azimute da fachada (°)",
+          "max_incidence": "Ângulo máximo de incidência (°)",
+          "roll_center_height": "Centro do rolo ao piso (cm)",
+          "edge_to_roll_open": "Borda ao centro do rolo, aberta (cm)",
+          "edge_to_floor_closed": "Borda ao piso, fechada (cm)",
+          "beam_height": "Altura do vão livre sob a viga (cm)",
+          "door_distance": "Distância da cortina à porta (cm)",
+          "door_height": "Altura da porta (cm)"
+        }
+      },
+      "sensors": {
+        "title": "Sensores e horizonte",
+        "data": {
+          "temperature_entity": "Sensor de temperatura",
+          "lux_entity": "Sensor de luminosidade",
+          "alarm_entity": "Alarme (desarmado = pode controlar)",
+          "horizon": "Perfil do horizonte (prédio vizinho)"
+        },
+        "data_description": {
+          "horizon": "Pontos azimute:elevação do topo do prédio, separados por ponto e vírgula. Ex.: 262:15; 291:15"
+        }
+      }
+    },
+    "error": {
+      "invalid_geometry": "Cotas incoerentes: a viga deve ficar acima da borda fechada e não acima da borda aberta, e as distâncias devem ser positivas.",
+      "invalid_horizon": "Formato inválido. Use pares azimute:elevação separados por ponto e vírgula, com pelo menos dois pontos."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "desired_position": { "name": "Posição desejada" },
+      "reason": {
+        "name": "Motivo",
+        "state": {
+          "sun_below_horizon": "Sol abaixo do horizonte",
+          "sun_not_on_facade": "Sol fora da fachada",
+          "alarm": "Alarme não desarmado",
+          "alarm_unavailable": "Alarme indisponível",
+          "temperature_low": "Temperatura abaixo do mínimo",
+          "temperature_unavailable": "Temperatura indisponível",
+          "low_light": "Pouca luz",
+          "building_shadow": "Prédio bloqueia o sol",
+          "geometric": "Proteção solar (geometria)"
+        }
+      },
+      "status": {
+        "name": "Estado do controle",
+        "state": {
+          "idle": "Na posição",
+          "moving": "Movendo",
+          "waiting": "Aguardando intervalo",
+          "paused": "Pausado (ajuste manual)",
+          "disabled": "Desligado",
+          "hold": "Parado (entrada indisponível)",
+          "unavailable": "Cortina indisponível"
+        }
+      },
+      "sun_delta": { "name": "Ângulo do sol na fachada" },
+      "profile_angle": { "name": "Ângulo de perfil" },
+      "shadow_drop": { "name": "Queda do raio até a porta" },
+      "door_lit": { "name": "Altura da porta iluminada" },
+      "horizon_elevation": { "name": "Horizonte do prédio" },
+      "sun_azimuth": { "name": "Azimute do sol" },
+      "sun_elevation": { "name": "Elevação do sol" }
+    },
+    "binary_sensor": {
+      "sun_on_facade": { "name": "Sol na fachada" },
+      "light_high": { "name": "Luminosidade alta" },
+      "building_shadow": { "name": "Sombra do prédio" },
+      "manual_pause": { "name": "Pausa por ajuste manual" }
+    },
+    "switch": {
+      "auto_control": { "name": "Controle automático" }
+    },
+    "button": {
+      "resume": { "name": "Retomar controle" }
+    },
+    "number": {
+      "temperature_min": { "name": "Temperatura mínima" },
+      "lux_on": { "name": "Lux para ligar" },
+      "lux_off": { "name": "Lux para desligar" },
+      "lux_delay": { "name": "Atraso da luminosidade" },
+      "margin": { "name": "Margem de sombra" },
+      "tolerance": { "name": "Tolerância de abertura" },
+      "min_interval": { "name": "Intervalo mínimo entre aberturas" },
+      "manual_pause": { "name": "Pausa após ajuste manual" }
+    }
+  }
+}
