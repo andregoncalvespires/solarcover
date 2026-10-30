@@ -3,10 +3,10 @@
   "name": "Solar Cover",
   "codeowners": ["@andregoncalvespires"],
   "config_flow": true,
-  "documentation": "https://github.com/andregoncalvespires/autocover",
+  "documentation": "https://github.com/andregoncalvespires/solarcover",
   "integration_type": "device",
   "iot_class": "calculation",
-  "issue_tracker": "https://github.com/andregoncalvespires/autocover/issues",
+  "issue_tracker": "https://github.com/andregoncalvespires/solarcover/issues",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
