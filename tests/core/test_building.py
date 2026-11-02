@@ -152,3 +152,10 @@ def test_porta_iluminada_considera_a_sombra() -> None:
     with_shadow = lit_door_height(GEO, drop, 100, shadow_height=110)
     assert with_shadow == pytest.approx(120.0)  # só de 110 a 230 chega à porta
     assert lit_door_height(GEO, drop, 100, shadow_height=0) == pytest.approx(156.0)
+
+
+def test_inicio_e_fim_trocados_dao_o_mesmo_resultado() -> None:
+    swapped = replace(WALL, azimuth_from=289, azimuth_to=251)
+    for azimuth in (240, 251, 266, 289, 300):
+        assert swapped.covers(azimuth) == WALL.covers(azimuth)
+    assert swapped.covers(266) and not swapped.covers(300)

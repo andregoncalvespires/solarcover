@@ -57,7 +57,7 @@ topo plano, paralela à fachada, nos *números* de configuração da cortina:
 |---|---|
 | Distância do prédio | m entre a cortina e a parede, na perpendicular à fachada |
 | Altura do prédio | m do topo acima do piso de referência da cortina |
-| Azimute do prédio (início / fim) | faixa de azimutes em que o prédio é visto da cortina |
+| Azimute do prédio (início / fim) | faixa de azimutes em que o prédio é visto da cortina (a ordem não importa; vale o arco menor) |
 
 Com os quatro preenchidos, a borda da cortina sobe até a altura da sombra
 (`altura − distância · tan φ`) menos a margem, e o motivo passa a ser `building_edge`.

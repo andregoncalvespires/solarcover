@@ -36,7 +36,7 @@ class Building:
     azimuth_from: float = 0.0
     """Início da faixa de azimutes em que o prédio é visto da cortina."""
     azimuth_to: float = 0.0
-    """Fim da faixa; a faixa pode cruzar o norte (``from > to``)."""
+    """Fim da faixa (a ordem dos dois azimutes não importa; ver ``covers``)."""
 
     @property
     def configured(self) -> bool:
@@ -48,14 +48,18 @@ class Building:
         )
 
     def covers(self, azimuth: float) -> bool:
-        """O sol, neste azimute, está atrás do prédio?"""
+        """O sol, neste azimute, está atrás do prédio?
+
+        A faixa é sempre o arco menor (até 180°) entre os dois azimutes: um prédio
+        não ocupa mais que meia volta da vista, então início e fim trocados de lugar
+        dão o mesmo resultado, e uma faixa como 350° a 10° cruza o norte.
+        """
         if not self.configured:
             return False
         start, end = self.azimuth_from % 360.0, self.azimuth_to % 360.0
-        azimuth %= 360.0
-        if start < end:
-            return start <= azimuth <= end
-        return azimuth >= start or azimuth <= end
+        if (end - start) % 360.0 > 180.0:
+            start, end = end, start
+        return (azimuth - start) % 360.0 <= (end - start) % 360.0
 
     def shadow_height(self, tan_profile: float) -> float:
         """Altura (cm) até onde a sombra cobre a cortina; ``<= 0`` se não há sombra."""
