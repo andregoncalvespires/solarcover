@@ -26,6 +26,14 @@ class Settings:
     manual_pause: float = 60.0
     """Minutos de pausa após um ajuste manual; 0 desativa a detecção."""
 
+    building_distance: float = 0.0
+    """m entre a cortina e o prédio vizinho (na normal da fachada); 0 desativa o modelo."""
+    building_height: float = 0.0
+    """m do topo do prédio acima do piso de referência da cortina; 0 desativa o modelo."""
+    building_azimuth_from: float = 0.0
+    building_azimuth_to: float = 0.0
+    """Faixa de azimutes (°) em que o prédio é visto da cortina; iguais desativam o modelo."""
+
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> Settings:
         """Cria a partir de um dict, ignorando chaves desconhecidas."""

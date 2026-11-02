@@ -42,6 +42,7 @@ def _decision_attributes(data: SolarCoverData) -> dict[str, Any]:
         "profile_angle": _round(decision.sun.profile_angle),
         "shadow_drop_cm": _round(decision.sun.drop),
         "horizon_elevation": _round(decision.horizon_elevation),
+        "building_shadow_cm": _round(decision.shadow_height),
         "current_position": data.current_position,
         "door_lit_cm": _round(data.door_lit_cm),
     }
@@ -111,6 +112,16 @@ SENSORS: tuple[SolarCoverSensorDescription, ...] = (
         native_unit_of_measurement=DEGREE,
         suggested_display_precision=1,
         value_fn=lambda data: _round(data.decision.horizon_elevation),
+    ),
+    SolarCoverSensorDescription(
+        key="building_shadow_height",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.DISTANCE,
+        native_unit_of_measurement=UnitOfLength.CENTIMETERS,
+        suggested_display_precision=0,
+        value_fn=lambda data: _round(
+            None if data.decision.shadow_height is None else max(data.decision.shadow_height, 0.0)
+        ),
     ),
     SolarCoverSensorDescription(
         key="sun_azimuth",

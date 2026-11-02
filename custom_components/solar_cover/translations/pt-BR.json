@@ -5,7 +5,9 @@
       "user": {
         "title": "Nova cortina",
         "description": "Escolha a cortina que terá controle solar. Cada cortina vira um dispositivo próprio.",
-        "data": { "cover_entity_id": "Cortina" }
+        "data": {
+          "cover_entity_id": "Cortina"
+        }
       },
       "discovery_confirm": {
         "title": "Cortina encontrada",
@@ -94,7 +96,9 @@
   },
   "entity": {
     "sensor": {
-      "desired_position": { "name": "Posição desejada" },
+      "desired_position": {
+        "name": "Posição desejada"
+      },
       "reason": {
         "name": "Motivo",
         "state": {
@@ -106,7 +110,8 @@
           "temperature_unavailable": "Temperatura indisponível",
           "low_light": "Pouca luz",
           "building_shadow": "Prédio bloqueia o sol",
-          "geometric": "Proteção solar (geometria)"
+          "geometric": "Proteção solar (geometria)",
+          "building_edge": "Seguindo a sombra do prédio"
         }
       },
       "status": {
@@ -121,35 +126,92 @@
           "unavailable": "Cortina indisponível"
         }
       },
-      "sun_delta": { "name": "Ângulo do sol na fachada" },
-      "profile_angle": { "name": "Ângulo de perfil" },
-      "shadow_drop": { "name": "Queda do raio até a porta" },
-      "door_lit": { "name": "Altura da porta iluminada" },
-      "horizon_elevation": { "name": "Horizonte do prédio" },
-      "sun_azimuth": { "name": "Azimute do sol" },
-      "sun_elevation": { "name": "Elevação do sol" }
+      "sun_delta": {
+        "name": "Ângulo do sol na fachada"
+      },
+      "profile_angle": {
+        "name": "Ângulo de perfil"
+      },
+      "shadow_drop": {
+        "name": "Queda do raio até a porta"
+      },
+      "door_lit": {
+        "name": "Altura da porta iluminada"
+      },
+      "horizon_elevation": {
+        "name": "Horizonte do prédio"
+      },
+      "sun_azimuth": {
+        "name": "Azimute do sol"
+      },
+      "sun_elevation": {
+        "name": "Elevação do sol"
+      },
+      "building_shadow_height": {
+        "name": "Altura da sombra do prédio"
+      }
     },
     "binary_sensor": {
-      "sun_on_facade": { "name": "Sol na fachada" },
-      "light_high": { "name": "Luminosidade alta" },
-      "building_shadow": { "name": "Sombra do prédio" },
-      "manual_pause": { "name": "Pausa por ajuste manual" }
+      "sun_on_facade": {
+        "name": "Sol na fachada"
+      },
+      "light_high": {
+        "name": "Luminosidade alta"
+      },
+      "building_shadow": {
+        "name": "Sombra do prédio"
+      },
+      "manual_pause": {
+        "name": "Pausa por ajuste manual"
+      }
     },
     "switch": {
-      "auto_control": { "name": "Controle automático" }
+      "auto_control": {
+        "name": "Controle automático"
+      }
     },
     "button": {
-      "resume": { "name": "Retomar controle" }
+      "resume": {
+        "name": "Retomar controle"
+      }
     },
     "number": {
-      "temperature_min": { "name": "Temperatura mínima" },
-      "lux_on": { "name": "Lux para ligar" },
-      "lux_off": { "name": "Lux para desligar" },
-      "lux_delay": { "name": "Atraso da luminosidade" },
-      "margin": { "name": "Margem de sombra" },
-      "tolerance": { "name": "Tolerância de abertura" },
-      "min_interval": { "name": "Intervalo mínimo entre aberturas" },
-      "manual_pause": { "name": "Pausa após ajuste manual" }
+      "temperature_min": {
+        "name": "Temperatura mínima"
+      },
+      "lux_on": {
+        "name": "Lux para ligar"
+      },
+      "lux_off": {
+        "name": "Lux para desligar"
+      },
+      "lux_delay": {
+        "name": "Atraso da luminosidade"
+      },
+      "margin": {
+        "name": "Margem de sombra"
+      },
+      "tolerance": {
+        "name": "Tolerância de abertura"
+      },
+      "min_interval": {
+        "name": "Intervalo mínimo entre aberturas"
+      },
+      "manual_pause": {
+        "name": "Pausa após ajuste manual"
+      },
+      "building_distance": {
+        "name": "Distância do prédio"
+      },
+      "building_height": {
+        "name": "Altura do prédio"
+      },
+      "building_azimuth_from": {
+        "name": "Azimute do prédio (início)"
+      },
+      "building_azimuth_to": {
+        "name": "Azimute do prédio (fim)"
+      }
     }
   }
 }

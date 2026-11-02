@@ -7,9 +7,11 @@ critérios são sempre avaliados e devolvidos em ``checks`` para diagnóstico.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from enum import StrEnum
 
+from .building import Building
 from .geometry import CurtainGeometry, SunOnFacade, required_position, sun_on_facade
 from .horizon import HorizonProfile
 
@@ -28,6 +30,7 @@ class Reason(StrEnum):
     TEMPERATURE_UNAVAILABLE = "temperature_unavailable"
     LOW_LIGHT = "low_light"
     BUILDING_SHADOW = "building_shadow"
+    BUILDING_EDGE = "building_edge"
     GEOMETRIC = "geometric"
 
 
@@ -58,6 +61,8 @@ class DecisionInput:
     geometry: CurtainGeometry
     horizon: HorizonProfile
     margin_cm: float
+    building: Building | None = None
+    """Parede vizinha; ``None`` ou não configurada = só vale o perfil de horizonte."""
     max_incidence: float = 85.0
     default_position: int = 100
     alarm: AlarmState | None = None
@@ -79,6 +84,8 @@ class Decision:
     sun: SunOnFacade
     horizon_elevation: float
     building_blocked: bool
+    shadow_height: float | None = None
+    """Altura (cm) da sombra do prédio na cortina; ``None`` sem prédio configurado no azimute."""
 
     @property
     def hold(self) -> bool:
@@ -101,6 +108,18 @@ def decide(inp: DecisionInput) -> Decision:
         and horizon_elevation > 0
         and inp.elevation < horizon_elevation + HORIZON_MARGIN_DEG
     )
+
+    wall_blocked = False
+    # Sombra do prédio sobre a cortina (modelo de parede); só onde o sol incide.
+    shadow_height: float | None = None
+    if (
+        inp.building is not None
+        and sun.incident
+        and sun.profile_angle is not None
+        and inp.building.covers(inp.azimuth)
+    ):
+        shadow_height = inp.building.shadow_height(math.tan(math.radians(sun.profile_angle)))
+        wall_blocked = shadow_height - inp.margin_cm >= inp.geometry.beam_height
 
     steps: list[tuple[Check, Reason]] = [
         (Check("sun_up", inp.elevation > 0, round(inp.elevation, 2)), Reason.SUN_BELOW_HORIZON),
@@ -132,6 +151,14 @@ def decide(inp: DecisionInput) -> Decision:
         (Check("building", not blocked, round(horizon_elevation, 2)), Reason.BUILDING_SHADOW)
     )
 
+    if shadow_height is not None:
+        steps.append(
+            (
+                Check("building_wall", not wall_blocked, round(shadow_height, 1)),
+                Reason.BUILDING_SHADOW,
+            )
+        )
+
     checks = tuple(check for check, _ in steps)
     failed = next((reason for check, reason in steps if not check.ok), None)
 
@@ -140,8 +167,14 @@ def decide(inp: DecisionInput) -> Decision:
         reason = failed
     else:
         assert sun.drop is not None  # sol incidente garante a queda calculada
-        position = round(required_position(inp.geometry, sun.drop, inp.margin_cm))
+        # Os raios abaixo da sombra do prédio nem chegam à cortina: a borda pode
+        # subir até o maior entre a queda do raio e a altura da sombra.
+        limit = sun.drop
         reason = Reason.GEOMETRIC
+        if shadow_height is not None and shadow_height > sun.drop:
+            limit = shadow_height
+            reason = Reason.BUILDING_EDGE
+        position = round(required_position(inp.geometry, limit, inp.margin_cm))
 
     return Decision(
         position=position,
@@ -149,5 +182,6 @@ def decide(inp: DecisionInput) -> Decision:
         checks=checks,
         sun=sun,
         horizon_elevation=horizon_elevation,
-        building_blocked=blocked,
+        building_blocked=blocked or wall_blocked,
+        shadow_height=shadow_height,
     )

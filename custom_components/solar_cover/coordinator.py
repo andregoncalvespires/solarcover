@@ -44,6 +44,7 @@ from .const import (
     STORAGE_VERSION,
     UPDATE_INTERVAL,
 )
+from .core.building import Building
 from .core.decision import AlarmState, Decision, DecisionInput, decide
 from .core.geometry import CurtainGeometry, lit_door_height
 from .core.horizon import HorizonProfile
@@ -301,6 +302,12 @@ class SolarCoverCoordinator(DataUpdateCoordinator[SolarCoverData]):
                 max_incidence=self.max_incidence,
                 geometry=self.geometry,
                 horizon=self.horizon,
+                building=Building(
+                    distance_cm=settings.building_distance * 100,
+                    height_cm=settings.building_height * 100,
+                    azimuth_from=settings.building_azimuth_from,
+                    azimuth_to=settings.building_azimuth_to,
+                ),
                 margin_cm=settings.margin,
                 alarm=alarm,
                 temperature=self._float_value(self.temperature_entity),
@@ -316,7 +323,9 @@ class SolarCoverCoordinator(DataUpdateCoordinator[SolarCoverData]):
         current, moving = self._cover_reading()
         lit = 0.0
         if current is not None and decision.sun.drop is not None and not decision.building_blocked:
-            lit = lit_door_height(self.geometry, decision.sun.drop, current)
+            lit = lit_door_height(
+                self.geometry, decision.sun.drop, current, max(decision.shadow_height or 0.0, 0.0)
+            )
 
         status = await self._async_apply(decision, current, moving, now)
 

@@ -5,7 +5,9 @@
       "user": {
         "title": "New curtain",
         "description": "Pick the curtain that gets solar control. Each curtain becomes its own device.",
-        "data": { "cover_entity_id": "Curtain" }
+        "data": {
+          "cover_entity_id": "Curtain"
+        }
       },
       "discovery_confirm": {
         "title": "Curtain found",
@@ -94,7 +96,9 @@
   },
   "entity": {
     "sensor": {
-      "desired_position": { "name": "Desired position" },
+      "desired_position": {
+        "name": "Desired position"
+      },
       "reason": {
         "name": "Reason",
         "state": {
@@ -106,7 +110,8 @@
           "temperature_unavailable": "Temperature unavailable",
           "low_light": "Low light",
           "building_shadow": "Building blocks the sun",
-          "geometric": "Sun protection (geometry)"
+          "geometric": "Sun protection (geometry)",
+          "building_edge": "Following building shadow"
         }
       },
       "status": {
@@ -121,35 +126,92 @@
           "unavailable": "Curtain unavailable"
         }
       },
-      "sun_delta": { "name": "Sun angle on facade" },
-      "profile_angle": { "name": "Profile angle" },
-      "shadow_drop": { "name": "Ray drop to the door" },
-      "door_lit": { "name": "Lit door height" },
-      "horizon_elevation": { "name": "Building horizon" },
-      "sun_azimuth": { "name": "Sun azimuth" },
-      "sun_elevation": { "name": "Sun elevation" }
+      "sun_delta": {
+        "name": "Sun angle on facade"
+      },
+      "profile_angle": {
+        "name": "Profile angle"
+      },
+      "shadow_drop": {
+        "name": "Ray drop to the door"
+      },
+      "door_lit": {
+        "name": "Lit door height"
+      },
+      "horizon_elevation": {
+        "name": "Building horizon"
+      },
+      "sun_azimuth": {
+        "name": "Sun azimuth"
+      },
+      "sun_elevation": {
+        "name": "Sun elevation"
+      },
+      "building_shadow_height": {
+        "name": "Building shadow height"
+      }
     },
     "binary_sensor": {
-      "sun_on_facade": { "name": "Sun on facade" },
-      "light_high": { "name": "High illuminance" },
-      "building_shadow": { "name": "Building shadow" },
-      "manual_pause": { "name": "Manual change pause" }
+      "sun_on_facade": {
+        "name": "Sun on facade"
+      },
+      "light_high": {
+        "name": "High illuminance"
+      },
+      "building_shadow": {
+        "name": "Building shadow"
+      },
+      "manual_pause": {
+        "name": "Manual change pause"
+      }
     },
     "switch": {
-      "auto_control": { "name": "Automatic control" }
+      "auto_control": {
+        "name": "Automatic control"
+      }
     },
     "button": {
-      "resume": { "name": "Resume control" }
+      "resume": {
+        "name": "Resume control"
+      }
     },
     "number": {
-      "temperature_min": { "name": "Minimum temperature" },
-      "lux_on": { "name": "Lux to turn on" },
-      "lux_off": { "name": "Lux to turn off" },
-      "lux_delay": { "name": "Illuminance delay" },
-      "margin": { "name": "Shadow margin" },
-      "tolerance": { "name": "Opening tolerance" },
-      "min_interval": { "name": "Minimum interval between openings" },
-      "manual_pause": { "name": "Pause after manual change" }
+      "temperature_min": {
+        "name": "Minimum temperature"
+      },
+      "lux_on": {
+        "name": "Lux to turn on"
+      },
+      "lux_off": {
+        "name": "Lux to turn off"
+      },
+      "lux_delay": {
+        "name": "Illuminance delay"
+      },
+      "margin": {
+        "name": "Shadow margin"
+      },
+      "tolerance": {
+        "name": "Opening tolerance"
+      },
+      "min_interval": {
+        "name": "Minimum interval between openings"
+      },
+      "manual_pause": {
+        "name": "Pause after manual change"
+      },
+      "building_distance": {
+        "name": "Building distance"
+      },
+      "building_height": {
+        "name": "Building height"
+      },
+      "building_azimuth_from": {
+        "name": "Building azimuth from"
+      },
+      "building_azimuth_to": {
+        "name": "Building azimuth to"
+      }
     }
   }
 }

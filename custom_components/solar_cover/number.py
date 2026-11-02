@@ -10,6 +10,7 @@ from homeassistant.components.number import (
     NumberMode,
 )
 from homeassistant.const import (
+    DEGREE,
     LIGHT_LUX,
     PERCENTAGE,
     EntityCategory,
@@ -51,6 +52,10 @@ NUMBERS: tuple[NumberEntityDescription, ...] = (
     _number("tolerance", 2, 30, 1, PERCENTAGE),
     _number("min_interval", 0, 60, 1, UnitOfTime.MINUTES),
     _number("manual_pause", 0, 480, 5, UnitOfTime.MINUTES),
+    _number("building_distance", 0, 200, 0.1, UnitOfLength.METERS),
+    _number("building_height", 0, 200, 0.1, UnitOfLength.METERS),
+    _number("building_azimuth_from", 0, 360, 1, DEGREE),
+    _number("building_azimuth_to", 0, 360, 1, DEGREE),
 )
 
 

@@ -154,11 +154,16 @@ def required_position(geometry: CurtainGeometry, drop: float, margin: float = 0.
     return position_for_edge(geometry, target)
 
 
-def lit_door_height(geometry: CurtainGeometry, drop: float, position: float) -> float:
+def lit_door_height(
+    geometry: CurtainGeometry, drop: float, position: float, shadow_height: float = 0.0
+) -> float:
     """Altura (cm) da porta, a partir do piso, que recebe sol direto.
 
-    Os raios que passam abaixo da borda, de 0 até ``e``, chegam à porta em
-    ``[-s, e - s)``; só a parte acima do piso ilumina a porta.
+    Os raios que passam entre a sombra do prédio (``shadow_height``, 0 se não
+    houver) e a borda ``e`` chegam à porta em ``[shadow - s, e - s)``; só a
+    parte acima do piso ilumina a porta.
     """
     opening = min(edge_height(geometry, position), geometry.beam_height)
-    return max(0.0, min(opening - drop, geometry.door_height))
+    top = min(opening - drop, geometry.door_height)
+    bottom = max(shadow_height - drop, 0.0)
+    return max(0.0, top - bottom)

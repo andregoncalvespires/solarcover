@@ -46,6 +46,26 @@ elevação é interpolada; fora deles não há obstrução. O sol só conta como
 250:0; 250:18; 280:18; 280:0   # prédio com quinas verticais
 ```
 
+### Prédio como parede (a sombra sobe pela cortina)
+
+O perfil de horizonte é um interruptor: abaixo do topo, o sol está bloqueado e a cortina
+abre. Na prática a sombra de um prédio sobe pela cortina aos poucos, e o sol ainda entra
+pela parte de cima do vão. Para seguir essa sombra, configure o prédio como uma parede de
+topo plano, paralela à fachada, nos *números* de configuração da cortina:
+
+| Número | O que é |
+|---|---|
+| Distância do prédio | m entre a cortina e a parede, na perpendicular à fachada |
+| Altura do prédio | m do topo acima do piso de referência da cortina |
+| Azimute do prédio (início / fim) | faixa de azimutes em que o prédio é visto da cortina |
+
+Com os quatro preenchidos, a borda da cortina sobe até a altura da sombra
+(`altura − distância · tan φ`) menos a margem, e o motivo passa a ser `building_edge`.
+Quando a sombra cobre todo o vão, o motivo é `building_shadow` e a cortina abre.
+O sensor **Altura da sombra do prédio** mostra o valor calculado, para você comparar com
+o que enxerga. **Deixe o perfil de horizonte vazio para o mesmo prédio**, senão ele abre
+a cortina antes da hora. Veja `docs/GEOMETRIA.md`, seção 7.
+
 ## Entidades de cada cortina
 
 | Entidade | O que é |
@@ -74,8 +94,9 @@ aberta). Todos aparecem em `checks`.
 | 3 | alarme desarmado (se configurado) | `alarm` / `alarm_unavailable` |
 | 4 | temperatura **acima** do mínimo (se configurada) | `temperature_low` / `temperature_unavailable` |
 | 5 | luminosidade alta, com histerese e atraso (se configurada) | `low_light` |
-| 6 | sol acima do topo do prédio | `building_shadow` |
+| 6 | sol acima do topo do prédio (perfil de horizonte) e sombra do prédio não cobre todo o vão | `building_shadow` |
 | — | tudo ok → posição geométrica | `geometric` |
+| — | tudo ok e a sombra do prédio na cortina é mais alta que a queda do raio → borda na sombra | `building_edge` |
 
 Se o motivo for **alarme ou temperatura indisponíveis**, a cortina **não se move**
 (estado `hold`) em vez de abrir às cegas.

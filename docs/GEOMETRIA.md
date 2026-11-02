@@ -111,3 +111,52 @@ não o curso da borda (237 cm entre 9 e 246 cm), o que deixava a borda cerca de 
 acima do limite do raio. O `Δ` pesa pouco nas linhas acima (sol quase de frente),
 mas cresce com o sol oblíquo, que a fórmula antiga ignorava. Se você compensava com a
 "distância adicional de sombra", o efeito pode ter sido parcialmente mascarado.
+
+## 7. Prédio como parede
+
+Hipótese: parede de topo plano, paralela à fachada, a `d` da cortina (na normal) e
+com o topo a `H` do piso de referência. Seguindo para trás um raio que cruza a cortina
+na altura `z`, ele chega à parede em `z + d · t`, com `t = tan(elev) / cos Δ` (a mesma
+tangente do ângulo de perfil). Ele passa por cima se `z + d·t ≥ H`; logo a sombra cobre
+a cortina até
+
+```
+z_sombra = H − d · t
+```
+
+Só os raios entre `z_sombra` e a borda `e` da cortina chegam ao vão, e um raio em `z`
+atinge a porta em `z − s`. Nenhum ilumina a porta se `e ≤ max(s, z_sombra) − margem`,
+portanto
+
+```
+posição = (max(s, z_sombra) − margem − 9) / 237 · 100
+```
+
+Se `z_sombra − margem ≥ 230` o vão inteiro está na sombra e a posição é 100 %.
+A transição é contínua: um pouco antes desse ponto o limite já está perto de 230 cm.
+
+### Estimativa a partir de medidas em campo (São Paulo, 31/10 e 02/11/2026)
+
+Cada medida define um raio rasante ao topo. Com a ponta da sombra no chão a 6,5 m da
+cortina (31/10 14:31), e a borda da sombra na cortina a 1,10 m (02/11 15:59) e a
+2,10 m (02/11 16:10), o ajuste por mínimos quadrados deu `d ≈ 14,9 m`, `H ≈ 10,3 m`
+e elevação do topo ≈ 34,8°. Os valores individuais variam (a distância, entre 14 e
+17 m), porque o intervalo entre as medidas é curto; o **ângulo** é o bem determinado.
+Meça a distância com trena para fixá-la.
+
+Resultado com `d = 14,9 m`, `H = 10,3 m`, margem 5 cm, em 02/11/2026:
+
+| Hora | Sombra na cortina | Sem prédio | Com prédio | Motivo |
+|---|---:|---:|---:|---|
+| 15:45 | 0 | 29 % | 29 % | geometric |
+| 15:59 | 113 cm | 25 % | 42 % | building_edge |
+| 16:10 | 199 cm | 22 % | 78 % | building_edge |
+| 16:20 | 273 cm | 20 % | 100 % | building_shadow |
+
+### Validação
+
+`tests/core/test_building.py` traça raios para trás até a parede, sem usar `Δ`, `φ`
+nem as fórmulas acima, e confirma que: a altura da sombra coincide; na posição
+calculada só passa um feixe de no máximo ≈ 1 cm (o arredondamento a 1 %); e abrir mais
+deixa sol chegar à porta. Também confere que a posição não salta na passagem para o
+bloqueio total.

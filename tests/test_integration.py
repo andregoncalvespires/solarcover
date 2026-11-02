@@ -24,11 +24,11 @@ from .common import (
 )
 
 EXPECTED_ENTITIES = {
-    "sensor": 10,
+    "sensor": 11,
     "binary_sensor": 4,
     "switch": 1,
     "button": 1,
-    "number": 8,
+    "number": 12,
 }
 
 
@@ -288,3 +288,40 @@ async def test_descarregar_entrada(hass: HomeAssistant, freezer: FrozenDateTimeF
     assert hass.states.get(entity_id(hass, "sensor", entry, "reason")).state == "unavailable"
     assert entry.data[CONF_COVER] == COVER
     assert hass.states.get(TEMPERATURE) is not None
+
+
+async def test_predio_configurado_pelas_entidades_segue_a_sombra(
+    hass: HomeAssistant, freezer: FrozenDateTimeFactory
+) -> None:
+    freezer.move_to(AFTERNOON)
+    entry, _ = await setup_curtain(hass, position=100)
+    position = entity_id(hass, "sensor", entry, "desired_position")
+    without_building = int(hass.states.get(position).state)
+    assert hass.states.get(entity_id(hass, "sensor", entry, "building_shadow_height")).state == (
+        "unknown"
+    )
+
+    for key, value in (
+        ("building_distance", 14.9),
+        ("building_height", 10.3),
+        ("building_azimuth_from", 251),
+        ("building_azimuth_to", 289),
+    ):
+        await hass.services.async_call(
+            "number",
+            "set_value",
+            {"entity_id": entity_id(hass, "number", entry, key), "value": value},
+            blocking=True,
+        )
+
+    state = hass.states.get(position)
+    assert state.attributes["reason"] == Reason.BUILDING_EDGE.value
+    assert int(state.state) > without_building  # a sombra do prédio libera mais abertura
+    # 30/10 16:00: tan φ ≈ 0,60 → sombra ≈ 1030 − 1490 · 0,60 ≈ 135 cm
+    shadow = float(
+        hass.states.get(entity_id(hass, "sensor", entry, "building_shadow_height")).state
+    )
+    assert 110 < shadow < 160
+    assert state.attributes["building_shadow_cm"] == shadow
+    assert "building_wall" in {check["name"] for check in state.attributes["checks"]}
+    assert hass.states.get(entity_id(hass, "sensor", entry, "reason")).state == "building_edge"
